@@ -5,9 +5,9 @@ using Unity.Netcode.Components;
 
 public class ClientNetworkTransform : NetworkTransform
 {
-    public override void OnNetworkDespawn()
+    public override void OnNetworkSpawn()
     {
-        base.OnNetworkDespawn();
+        base.OnNetworkSpawn();
 
         CanCommitToTransform = IsOwner;
     }
