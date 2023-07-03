@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1523913669
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1a838243856331f4681c559527ad5846, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -405,7 +405,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1523913669
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 200
   m_Sprite: {fileID: 21300000, guid: a94bf141bd2044c4399e321445c83112, type: 3}
   m_Color: {r: 0.25882354, g: 0.40784314, b: 0.8235294, a: 1}
@@ -489,7 +489,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1523913669
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 100
   m_Sprite: {fileID: 21300000, guid: 8769e4453ce5bc3429cfba7d58fbef13, type: 3}
   m_Color: {r: 0.25882354, g: 0.40784314, b: 0.8235294, a: 1}
@@ -595,6 +595,7 @@ GameObject:
   - component: {fileID: 6635738068849999754}
   - component: {fileID: 9184803896326373644}
   - component: {fileID: 680945746911141561}
+  - component: {fileID: 8791681130206522721}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -742,6 +743,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectileSpawnPoint: {fileID: 6119673400820477168}
   inputReader: {fileID: 11400000, guid: 628c63a72bde2bd4a9928e70c7c2ffc3, type: 2}
+  wallet: {fileID: 8791681130206522721}
   serverProjectilePrefab: {fileID: 4605359855324546957, guid: c3bf5fcf6b70a9045b9a80dce3e16279, type: 3}
   clientProjectilePrefab: {fileID: 1939124500086105649, guid: 52238c3914eb9b44ba29a235659ec386, type: 3}
   muzzleFlash: {fileID: 8856861731170109020}
@@ -749,6 +751,7 @@ MonoBehaviour:
   projectileSpeed: 30
   fireRate: 0.75
   muzzleFlashDuration: 0.075
+  costToFire: 5
 --- !u!114 &9184803896326373644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -776,6 +779,20 @@ MonoBehaviour:
   maxHealth: 100
   CurrentHealth:
     m_InternalValue: 100
+--- !u!114 &8791681130206522721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7720366541976718107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa53d32b18cf845428d244b8fdadf352, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalCoins:
+    m_InternalValue: 0
 --- !u!1 &8856861731170109020
 GameObject:
   m_ObjectHideFlags: 0
@@ -847,7 +864,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1523913669
-  m_SortingLayer: 2
+  m_SortingLayer: 4
   m_SortingOrder: 20
   m_Sprite: {fileID: 21300000, guid: 9d8bd4f8481a773488649b18bd02cbc1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
