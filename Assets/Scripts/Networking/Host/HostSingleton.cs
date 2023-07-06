@@ -4,31 +4,26 @@ using UnityEngine;
 
 public class HostSingleton : MonoBehaviour
 {
-    private HostGameManager gameManager;
-
     private static HostSingleton instance;
 
-    public static HostSingleton Instance 
+    public HostGameManager GameManager { get; private set; }
+
+    public static HostSingleton Instance
     {
-        get 
-        { 
-            if (instance != null) 
-                return instance;  
-                
+        get
+        {
+            if (instance != null) { return instance; }
+
             instance = FindObjectOfType<HostSingleton>();
-        
-            if (instance == null) 
+
+            if (instance == null)
             {
-
-                Debug.LogError("No host singleton in the scene.");
-
+                Debug.LogError("No HostSingleton in the scene!");
                 return null;
             }
 
             return instance;
         }
-
-        private set {}
     }
 
     private void Start()
@@ -38,6 +33,11 @@ public class HostSingleton : MonoBehaviour
 
     public void CreateHost()
     {
-        gameManager = new HostGameManager();
+        GameManager = new HostGameManager();
+    }
+
+    private void OnDestroy() 
+    {
+        GameManager?.Dispose();    
     }
 }
