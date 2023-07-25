@@ -21,11 +21,10 @@ public class InputReader : ScriptableObject, IPlayerActions
             controls = new Controls();
 
             controls.Player.SetCallbacks(this);
+        }
 
-            controls.Player.Enable();
-
-        }    
-    }
+		controls.Player.Enable();
+	}
 
     public void OnMove(InputAction.CallbackContext context)
     {

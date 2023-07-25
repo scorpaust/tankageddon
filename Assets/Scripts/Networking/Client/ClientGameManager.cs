@@ -21,6 +21,10 @@ public class ClientGameManager : IDisposable
 
     private NetworkClient networkClient;
 
+    private MatchplayMatchmaker matchplayMatchmaker;
+
+    private UserData userData;
+
     public async Task<bool> InitAsync()
     {
         // Authenticate player
@@ -28,11 +32,19 @@ public class ClientGameManager : IDisposable
 
         networkClient = new NetworkClient(NetworkManager.Singleton);
 
+        matchplayMatchmaker = new MatchplayMatchmaker();
+
         AuthState authState = await AuthenticationWrapper.DoAuth();
 
         if (authState == AuthState.Authenticated)
         {
-            return true;
+			userData = new UserData
+			{
+				userName = PlayerPrefs.GetString(NameSelector.playerNameKey, "Missing Name"),
+				userAuthId = AuthenticationService.Instance.PlayerId
+			};
+
+			return true;
         }
 
         return false;
@@ -43,9 +55,23 @@ public class ClientGameManager : IDisposable
         SceneManager.LoadScene(MenuSceneName);
     }
 
+    public void StartClient(string ip, int port)
+    {
+		UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+
+        transport.SetConnectionData(ip, (ushort)port);
+
+        ConnectClient(userData);
+	}
+
     public async Task StartClientAsync(string joinCode)
     {
-        try 
+		if (String.IsNullOrEmpty(joinCode))
+		{
+			Debug.LogError("Please input a join code.");
+			return;
+		}
+		try 
         {
             allocation = await Relay.Instance.JoinAllocationAsync(joinCode);
         }
@@ -62,12 +88,11 @@ public class ClientGameManager : IDisposable
 
         transport.SetRelayServerData(relayServerData);
 
-        UserData userData = new UserData
-        {
-            userName = PlayerPrefs.GetString(NameSelector.playerNameKey, "Missing Name"),
-            userAuthId = AuthenticationService.Instance.PlayerId
-        };
+        ConnectClient(userData);
+    }
 
+    private void ConnectClient(UserData userData) 
+    {
         string payload = JsonUtility.ToJson(userData);
 
         byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
@@ -77,8 +102,40 @@ public class ClientGameManager : IDisposable
         NetworkManager.Singleton.StartClient();
     }
 
+    public async void MatchmakeAsync(Action<MatchmakerPollingResult> onMatchmakeResponse)
+    {
+        if (matchplayMatchmaker.IsMatchmaking) return;
+
+        MatchmakerPollingResult matchResult = await GetMatchAsync();
+
+        onMatchmakeResponse?.Invoke(matchResult);
+    }
+
+    private async Task<MatchmakerPollingResult> GetMatchAsync()
+    {
+        MatchmakingResult matchmakingResult = await matchplayMatchmaker.Matchmake(userData);
+
+        if (matchmakingResult.result == MatchmakerPollingResult.Success)
+        {
+            // Connect to server
+            StartClient(matchmakingResult.ip, matchmakingResult.port);
+        }
+
+        return matchmakingResult.result;
+    }
+
     public void Dispose() 
     {
         networkClient?.Dispose();
     }
+
+	public void Disconnect()
+	{
+        networkClient.Disconnect();
+	}
+
+	public async Task CancelMatchmaking()
+	{
+        await matchplayMatchmaker.CancelMatchmaking();
+	}
 }

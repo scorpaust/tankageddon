@@ -13,9 +13,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
+using Unity.Networking.Transport;
+
 public class HostGameManager : IDisposable
 {
     private Allocation allocation;
+
+    private NetworkObject playerPrefab;
 
     private string joinCode;
 
@@ -25,13 +29,18 @@ public class HostGameManager : IDisposable
 
     private const string GameSceneName = "Level01";
 
-    private NetworkServer networkServer; 
+    public NetworkServer NetworkServer { get; private set; }
+
+    public HostGameManager(NetworkObject playerPrefab)
+    {
+        this.playerPrefab = playerPrefab;
+    }
 
     public async Task StartHostAsync()
     {
         try
         {
-            allocation = await Relay.Instance.CreateAllocationAsync(maxConnections);
+			allocation = await Relay.Instance.CreateAllocationAsync(maxConnections);
         }
         catch (Exception e)
         {
@@ -90,7 +99,7 @@ public class HostGameManager : IDisposable
             return;
         }
 
-        networkServer = new NetworkServer(NetworkManager.Singleton); 
+        NetworkServer = new NetworkServer(NetworkManager.Singleton, playerPrefab); 
 
         UserData userData = new UserData
         {
@@ -107,10 +116,18 @@ public class HostGameManager : IDisposable
 
         NetworkManager.Singleton.StartHost();
 
+        NetworkServer.OnClientLeft += HandleClientLeft;
+
         NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
+
     }
 
-    private IEnumerator HeartBeatLobby(float waitTimeSeconds) 
+	private string GetRegionOrQosDefault()
+	{
+		throw new NotImplementedException();
+	}
+
+	private IEnumerator HeartBeatLobby(float waitTimeSeconds) 
     {
         WaitForSecondsRealtime delay = new WaitForSecondsRealtime(waitTimeSeconds);
 
@@ -122,25 +139,42 @@ public class HostGameManager : IDisposable
         }
     }
 
-    public async void Dispose() 
+    public void Dispose() 
     {
-        HostSingleton.Instance.StopCoroutine(nameof(HeartBeatLobby));
+        Shutdown();
+    }
 
-        if (!string.IsNullOrEmpty(lobbyId))
+	public async void Shutdown()
+	{
+        if (string.IsNullOrEmpty(lobbyId)) return;
+		
+		HostSingleton.Instance.StopCoroutine(nameof(HeartBeatLobby));
+
+		try
+		{
+			await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
+		}
+		catch (LobbyServiceException e)
+		{
+			Debug.Log(e);
+		}
+
+		lobbyId = string.Empty;
+
+		NetworkServer?.Dispose();
+		
+        NetworkServer.OnClientLeft -= HandleClientLeft;
+	}
+
+    private async void HandleClientLeft(string authId)
+    {
+        try
         {
-            try 
-            {
-                await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
-            }
-            catch (LobbyServiceException e)
-            {
-                Debug.Log(e);
-            }
-
-            lobbyId = string.Empty;
+            await LobbyService.Instance.RemovePlayerAsync(lobbyId, authId);
         }
-
-        networkServer.Dispose();
-
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
     }
 }

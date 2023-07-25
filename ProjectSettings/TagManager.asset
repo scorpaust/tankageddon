@@ -13,8 +13,8 @@ TagManager:
   - UI
   - Projectile
   - Pickup
-  - 
-  - 
+  - Minimap
+  - Sun
   - 
   - 
   - 
@@ -44,12 +44,21 @@ TagManager:
   - name: Background
     uniqueID: 3929410125
     locked: 0
+  - name: Healing Zone
+    uniqueID: 3190555179
+    locked: 0
   - name: Terrain
     uniqueID: 1269241711
     locked: 0
   - name: Coin
     uniqueID: 2281930541
     locked: 0
+  - name: VFX - Trail
+    uniqueID: 4057933833
+    locked: 0
   - name: Player
     uniqueID: 1523913669
+    locked: 0
+  - name: VFX - Smoke
+    uniqueID: 1558469745
     locked: 0

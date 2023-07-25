@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,11 +16,10 @@ public class ClientSingleton : MonoBehaviour
         {
             if (instance != null) { return instance; }
 
-            instance = FindObjectOfType<ClientSingleton>();
+            instance = GameObject.FindObjectOfType<ClientSingleton>();
 
             if (instance == null)
             {
-                Debug.LogError("No ClientSingleton in the scene!");
                 return null;
             }
 
@@ -27,8 +27,7 @@ public class ClientSingleton : MonoBehaviour
         }
     }
 
-
-    private void Start()
+	private void Start()
     {
         DontDestroyOnLoad(gameObject);
     }
