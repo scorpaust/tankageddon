@@ -4935,6 +4935,7 @@ GameObject:
   - component: {fileID: 6675259196919514876}
   - component: {fileID: 424233174262411381}
   - component: {fileID: 5550093008632864797}
+  - component: {fileID: 7894822818901592619}
   m_Layer: 0
   m_Name: Tank Treads
   m_TagString: Untagged
@@ -5088,6 +5089,23 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7894822818901592619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2824037381460516449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aae86c6eb6d21fc4c9549ddc790cc9de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamColorLookup: {fileID: 11400000, guid: bea541ace16d97f4ab23d422af11632b, type: 2}
+  player: {fileID: 4065799218566484336}
+  playerSprites:
+  - {fileID: 8810009241318433486}
+  - {fileID: 96655549661954536}
 --- !u!1 &4080142932388994341
 GameObject:
   m_ObjectHideFlags: 0
@@ -15463,6 +15481,8 @@ MonoBehaviour:
         byte0027: 0
         byte0028: 0
         byte0029: 0
+  TeamIndex:
+    m_InternalValue: 0
 --- !u!114 &1387907441018187898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15509,6 +15529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpawnPoint: {fileID: 6119673400820477168}
+  player: {fileID: 4065799218566484336}
   inputReader: {fileID: 11400000, guid: 628c63a72bde2bd4a9928e70c7c2ffc3, type: 2}
   wallet: {fileID: 8791681130206522721}
   serverProjectilePrefab: {fileID: 4605359855324546957, guid: c3bf5fcf6b70a9045b9a80dce3e16279, type: 3}

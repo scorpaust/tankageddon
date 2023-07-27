@@ -56,7 +56,7 @@ public class MatchplayBackfiller : IDisposable
         BackfillLoop();
     }
 
-    public void AddPlayerToMatch(UserData userData)
+    /*public void AddPlayerToMatch(UserData userData)
     {
         if (!IsBackfilling)
         {
@@ -78,6 +78,12 @@ public class MatchplayBackfiller : IDisposable
         MatchProperties.Players.Add(matchmakerPlayer);
         MatchProperties.Teams[0].PlayerIds.Add(matchmakerPlayer.Id);
         localDataDirty = true;
+    }*/
+
+    public Team GetTeamByUserId(string userId)
+    {
+        return MatchProperties.Teams.FirstOrDefault(
+                t => t.PlayerIds.Contains(userId));
     }
 
     public int RemovePlayerFromMatch(string userId)
@@ -90,7 +96,7 @@ public class MatchplayBackfiller : IDisposable
         }
 
         MatchProperties.Players.Remove(playerToRemove);
-        MatchProperties.Teams[0].PlayerIds.Remove(userId);
+        GetTeamByUserId(userId).PlayerIds.Remove(userId);
         localDataDirty = true;
 
         return MatchPlayerCount;

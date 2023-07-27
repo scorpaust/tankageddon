@@ -21,7 +21,7 @@ public class HostGameManager : IDisposable
 
     private NetworkObject playerPrefab;
 
-    private string joinCode;
+    public string JoinCode { get; private set; }
 
     private string lobbyId;
 
@@ -36,7 +36,7 @@ public class HostGameManager : IDisposable
         this.playerPrefab = playerPrefab;
     }
 
-    public async Task StartHostAsync()
+    public async Task StartHostAsync(bool isPrivate)
     {
         try
         {
@@ -51,9 +51,9 @@ public class HostGameManager : IDisposable
 
         try
         {
-            joinCode = await Relay.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            JoinCode = await Relay.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
-            Debug.Log(joinCode);
+            Debug.Log(JoinCode);
         }
         catch (Exception e)
         {
@@ -72,14 +72,14 @@ public class HostGameManager : IDisposable
         {
             CreateLobbyOptions lobbyOptions = new CreateLobbyOptions();
 
-            lobbyOptions.IsPrivate = false;
+            lobbyOptions.IsPrivate = isPrivate;
 
             lobbyOptions.Data = new Dictionary<string, DataObject>()
             {
                 {
                     "JoinCode", new DataObject(
                         visibility: DataObject.VisibilityOptions.Member,
-                        value: joinCode
+                        value: JoinCode
                     )
                 }
             };
